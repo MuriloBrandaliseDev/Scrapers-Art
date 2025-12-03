@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Scrapers Art{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-speedometer2 text-primary me-2"></i>Dashboard
+                    </h1>
+                    <p class="text-muted mb-0">Visão geral completa do sistema de scraping</p>
+                </div>
+                <div class="d-none d-md-flex gap-2">
+                    <a href="/api/v1/iarremate" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#startScraperModal">
+                        <i class="bi bi-play-fill"></i> Iniciar Scraping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="stat-value">{{ total_obras }}</p>
+                    <p class="stat-label">Total de Obras</p>
+                </div>
+                <i class="bi bi-image stat-icon"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card success">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="stat-value" style="color: var(--success);">{{ total_sessoes }}</p>
+                    <p class="stat-label">Sessões Totais</p>
+                </div>
+                <i class="bi bi-clock-history stat-icon" style="color: var(--success);"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card warning">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="stat-value" style="color: var(--warning);">{{ sessoes_ativas }}</p>
+                    <p class="stat-label">Sessões Ativas</p>
+                </div>
+                <i class="bi bi-activity stat-icon" style="color: var(--warning);"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card info">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="stat-value" style="color: var(--info);">{{ obras_por_scraper|length }}</p>
+                    <p class="stat-label">Scrapers Ativos</p>
+                </div>
+                <i class="bi bi-robot stat-icon" style="color: var(--info);"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Obras por Categoria -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <i class="bi bi-pie-chart-fill"></i>
+                        Obras por Categoria
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="categoriaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Obras por Scraper -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <i class="bi bi-bar-chart-fill"></i>
+                        Obras por Scraper
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="scraperChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimas Sessões -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <i class="bi bi-clock-history"></i>
+                        Últimas Sessões de Scraping
+                    </div>
+                    <a href="/sessoes" class="btn btn-sm btn-light">
+                        <i class="bi bi-arrow-right"></i> Ver Todas
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-wrapper">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Scraper</th>
+                                    <th>Status</th>
+                                    <th>Obras Coletadas</th>
+                                    <th>Páginas</th>
+                                    <th>Início</th>
+                                    <th>Fim</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sessao in ultimas_sessoes %}
+                                <tr>
+                                    <td><strong class="text-primary">#{{ sessao.id }}</strong></td>
+                                    <td>
+                                        <span class="badge badge-primary">
+                                            <i class="bi bi-robot"></i> {{ sessao.scraper_name|upper }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if sessao.status == "concluido" %}
+                                            <span class="badge badge-success">
+                                                <i class="bi bi-check-circle"></i> Concluído
+                                            </span>
+                                        {% elif sessao.status == "executando" %}
+                                            <span class="badge badge-warning">
+                                                <span class="loading me-1"></span> Executando
+                                            </span>
+                                        {% elif sessao.status == "erro" %}
+                                            <span class="badge badge-danger">
+                                                <i class="bi bi-exclamation-triangle"></i> Erro
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-info">{{ sessao.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong class="text-success">{{ sessao.total_obras }}</strong>
+                                    </td>
+                                    <td>{{ sessao.paginas_processadas }}</td>
+                                    <td>
+                                        <small class="text-muted">{{ sessao.inicio.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    </td>
+                                    <td>
+                                        {% if sessao.fim %}
+                                            <small class="text-muted">{{ sessao.fim.strftime('%d/%m/%Y %H:%M') }}</small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sessao.arquivo_saida %}
+                                        <a href="/static/{{ sessao.arquivo_saida }}" class="btn btn-sm btn-outline-primary" download>
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="empty-state">
+                                        <i class="bi bi-inbox"></i>
+                                        <p class="mb-0">Nenhuma sessão encontrada</p>
+                                        <small class="text-muted">Inicie uma nova sessão de scraping para ver os resultados aqui</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configuração global do Chart.js
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#6B7280';
+
+// Gráfico de Categorias - Doughnut
+const categoriaCtx = document.getElementById('categoriaChart').getContext('2d');
+const categoriaData = {
+    labels: [{% for cat, total in obras_por_categoria %}'{{ cat or "N/A" }}'{% if not loop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+        data: [{% for cat, total in obras_por_categoria %}{{ total }}{% if not loop.last %},{% endif %}{% endfor %}],
+        backgroundColor: [
+            '#2563EB',
+            '#10B981',
+            '#F59E0B',
+            '#EF4444',
+            '#8B5CF6',
+            '#06B6D4'
+        ],
+        borderWidth: 0,
+        hoverOffset: 8
+    }]
+};
+
+new Chart(categoriaCtx, {
+    type: 'doughnut',
+    data: categoriaData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    usePointStyle: true,
+                    font: {
+                        weight: 500
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    size: 13
+                }
+            }
+        }
+    }
+});
+
+// Gráfico de Scrapers - Bar
+const scraperCtx = document.getElementById('scraperChart').getContext('2d');
+const scraperData = {
+    labels: [{% for scraper, total in obras_por_scraper %}'{{ scraper|upper }}'{% if not loop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+        label: 'Obras Coletadas',
+        data: [{% for scraper, total in obras_por_scraper %}{{ total }}{% if not loop.last %},{% endif %}{% endfor %}],
+        backgroundColor: [
+            'rgba(37, 99, 235, 0.8)',
+            'rgba(16, 185, 129, 0.8)'
+        ],
+        borderRadius: 8,
+        borderSkipped: false
+    }]
+};
+
+new Chart(scraperCtx, {
+    type: 'bar',
+    data: scraperData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    font: {
+                        weight: 500
+                    }
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    font: {
+                        weight: 500
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

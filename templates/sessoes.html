@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Sessões de Scraping - Scrapers Art{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-clock-history text-primary me-2"></i>Sessões de Scraping
+                    </h1>
+                    <p class="text-muted mb-0">
+                        <strong class="text-primary">{{ total }}</strong> sessões registradas
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <div>
+                <i class="bi bi-funnel"></i>
+                Filtros de Busca
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="bi bi-info-circle me-1"></i>Status
+                    </label>
+                    <select name="status" class="form-select">
+                        <option value="">Todos os Status</option>
+                        <option value="concluido" {% if status == "concluido" %}selected{% endif %}>Concluído</option>
+                        <option value="executando" {% if status == "executando" %}selected{% endif %}>Executando</option>
+                        <option value="erro" {% if status == "erro" %}selected{% endif %}>Erro</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="bi bi-robot me-1"></i>Scraper
+                    </label>
+                    <select name="scraper" class="form-select">
+                        <option value="">Todos os Scrapers</option>
+                        <option value="iarremate" {% if scraper == "iarremate" %}selected{% endif %}>iArremate</option>
+                        <option value="leiloes_br" {% if scraper == "leiloes_br" %}selected{% endif %}>LeilõesBR</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i>Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela de Sessões -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <i class="bi bi-list-ul"></i>
+                Histórico de Sessões
+            </div>
+            <div>
+                <span class="badge badge-primary">{{ total }} resultados</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-wrapper">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Scraper</th>
+                            <th>Status</th>
+                            <th>Obras</th>
+                            <th>Páginas</th>
+                            <th>Início</th>
+                            <th>Fim</th>
+                            <th>Duração</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sessao in sessoes %}
+                        <tr>
+                            <td>
+                                <strong class="text-primary">#{{ sessao.id }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge badge-primary">
+                                    <i class="bi bi-robot"></i> {{ sessao.scraper_name|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if sessao.status == "concluido" %}
+                                    <span class="badge badge-success">
+                                        <i class="bi bi-check-circle"></i> Concluído
+                                    </span>
+                                {% elif sessao.status == "executando" %}
+                                    <span class="badge badge-warning">
+                                        <span class="loading me-1"></span> Executando
+                                    </span>
+                                {% elif sessao.status == "erro" %}
+                                    <span class="badge badge-danger">
+                                        <i class="bi bi-exclamation-triangle"></i> Erro
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-info">{{ sessao.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong class="text-success">{{ sessao.total_obras }}</strong>
+                            </td>
+                            <td>{{ sessao.paginas_processadas }}</td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ sessao.inicio.strftime('%d/%m/%Y %H:%M:%S') }}
+                                </small>
+                            </td>
+                            <td>
+                                {% if sessao.fim %}
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar-check me-1"></i>
+                                        {{ sessao.fim.strftime('%d/%m/%Y %H:%M:%S') }}
+                                    </small>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if sessao.fim %}
+                                    <span class="badge badge-info">
+                                        {{ ((sessao.fim - sessao.inicio).total_seconds() / 60)|round(1) }} min
+                                    </span>
+                                {% elif sessao.status == "executando" %}
+                                    <span class="text-warning">
+                                        <i class="bi bi-hourglass-split"></i> Em andamento...
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    {% if sessao.arquivo_saida %}
+                                    <a href="/static/{{ sessao.arquivo_saida }}" class="btn btn-sm btn-outline-success" download title="Download Excel">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if sessao.erro %}
+                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ sessao.erro }}">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <i class="bi bi-inbox"></i>
+                                <p class="mb-0 mt-3">Nenhuma sessão encontrada</p>
+                                <small class="text-muted">Execute um novo scraping para ver as sessões aqui</small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginação -->
+    {% if total_pages > 1 %}
+    <nav aria-label="Paginação de sessões">
+        <ul class="pagination">
+            {% if page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page - 1 }}{% if status %}&status={{ status }}{% endif %}{% if scraper %}&scraper={{ scraper }}{% endif %}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for p in range(1, total_pages + 1) %}
+                {% if p == page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ p }}</span>
+                </li>
+                {% elif p <= 3 or p > total_pages - 3 or (p >= page - 1 and p <= page + 1) %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ p }}{% if status %}&status={{ status }}{% endif %}{% if scraper %}&scraper={{ scraper }}{% endif %}">{{ p }}</a>
+                </li>
+                {% elif p == 4 or p == total_pages - 3 %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page < total_pages %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page + 1 }}{% if status %}&status={{ status }}{% endif %}{% if scraper %}&scraper={{ scraper }}{% endif %}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<script>
+// Inicializar tooltips do Bootstrap
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+</script>
+{% endblock %}

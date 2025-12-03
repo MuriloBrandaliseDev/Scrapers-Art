@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Obras Coletadas - Scrapers Art{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-image text-primary me-2"></i>Obras Coletadas
+                    </h1>
+                    <p class="text-muted mb-0">
+                        <strong class="text-primary">{{ total }}</strong> obras encontradas no total
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <div>
+                <i class="bi bi-funnel"></i>
+                Filtros de Busca
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        <i class="bi bi-robot me-1"></i>Scraper
+                    </label>
+                    <select name="scraper" class="form-select">
+                        <option value="">Todos os Scrapers</option>
+                        {% for s in scrapers %}
+                        <option value="{{ s }}" {% if scraper == s %}selected{% endif %}>{{ s|upper }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        <i class="bi bi-tags me-1"></i>Categoria
+                    </label>
+                    <select name="categoria" class="form-select">
+                        <option value="">Todas as Categorias</option>
+                        {% for c in categorias %}
+                        <option value="{{ c }}" {% if categoria == c %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="bi bi-person me-1"></i>Artista
+                    </label>
+                    <input type="text" name="artista" class="form-control" placeholder="Digite o nome do artista..." value="{{ artista or '' }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i>Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela de Obras -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <i class="bi bi-list-ul"></i>
+                Lista de Obras
+            </div>
+            <div>
+                <span class="badge badge-primary">{{ total }} resultados</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-wrapper">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Artista</th>
+                            <th>Título</th>
+                            <th>Categoria</th>
+                            <th>Valor</th>
+                            <th>Scraper</th>
+                            <th>Data Coleta</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obra in obras %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-circle text-primary me-2"></i>
+                                    <strong>{{ obra.nome_artista or "N/A" }}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-truncate d-inline-block" style="max-width: 250px;" title="{{ obra.titulo or 'N/A' }}">
+                                    {{ obra.titulo or "N/A" }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">
+                                    <i class="bi bi-tag"></i> {{ obra.categoria or "N/A" }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if obra.valor and obra.valor != "N/A" %}
+                                    <strong class="text-success">
+                                        <i class="bi bi-currency-dollar"></i> R$ {{ obra.valor }}
+                                    </strong>
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-primary">
+                                    <i class="bi bi-robot"></i> {{ obra.scraper_name|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ obra.data_coleta.strftime('%d/%m/%Y %H:%M') }}
+                                </small>
+                            </td>
+                            <td>
+                                <a href="{{ obra.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="Ver obra original">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="bi bi-inbox"></i>
+                                <p class="mb-0 mt-3">Nenhuma obra encontrada</p>
+                                <small class="text-muted">Tente ajustar os filtros ou execute um novo scraping</small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginação -->
+    {% if total_pages > 1 %}
+    <nav aria-label="Paginação de obras">
+        <ul class="pagination">
+            {% if page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page - 1 }}{% if scraper %}&scraper={{ scraper }}{% endif %}{% if categoria %}&categoria={{ categoria }}{% endif %}{% if artista %}&artista={{ artista }}{% endif %}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for p in range(1, total_pages + 1) %}
+                {% if p == page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ p }}</span>
+                </li>
+                {% elif p <= 3 or p > total_pages - 3 or (p >= page - 1 and p <= page + 1) %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ p }}{% if scraper %}&scraper={{ scraper }}{% endif %}{% if categoria %}&categoria={{ categoria }}{% endif %}{% if artista %}&artista={{ artista }}{% endif %}">{{ p }}</a>
+                </li>
+                {% elif p == 4 or p == total_pages - 3 %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page < total_pages %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page + 1 }}{% if scraper %}&scraper={{ scraper }}{% endif %}{% if categoria %}&categoria={{ categoria }}{% endif %}{% if artista %}&artista={{ artista }}{% endif %}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
