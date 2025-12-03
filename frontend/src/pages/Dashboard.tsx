@@ -57,7 +57,14 @@ export default function Dashboard() {
     refetchInterval: 30000,
   })
 
-  const defaultStats = {
+  interface StatsType {
+    total_obras: number
+    total_sessoes: number
+    obras_por_categoria: Record<string, number>
+    obras_por_scraper: Record<string, number>
+  }
+
+  const defaultStats: StatsType = {
     total_obras: 0,
     total_sessoes: 0,
     obras_por_categoria: {} as Record<string, number>,
@@ -266,25 +273,25 @@ export default function Dashboard() {
     
     return Object.entries(categoriasCount)
       .map(([name, value]) => ({
-        name,
-        value,
-      }))
+    name,
+    value,
+  }))
       .sort((a, b) => b.value - a.value)
   }, [obras])
 
   // Calcular distribuição por scraper a partir das obras reais
   const scraperData = useMemo(() => {
     if (!obras || obras.length === 0) {
-      return Object.entries(currentStats.obras_por_scraper).map(([name, value]) => ({
+      return Object.entries(currentStats.obras_por_scraper || {}).map(([name, value]) => ({
         name: name.toUpperCase(),
-        value,
+        value: value as number,
       }))
     }
     
     const scrapersCount: Record<string, number> = {}
-    obras.forEach(obra => {
+    obras.forEach((obra: any) => {
       // Tentar diferentes campos possíveis para o scraper
-      const scraper = (obra as any).scraper_name || (obra as any).scraper || (obra as any).fonte || 'Desconhecido'
+      const scraper = obra.scraper_name || obra.scraper || obra.fonte || 'Desconhecido'
       if (scraper && scraper !== 'N/A') {
         scrapersCount[scraper] = (scrapersCount[scraper] || 0) + 1
       }
@@ -388,7 +395,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mb-2 min-w-0">
                   <p className="text-4xl font-bold text-[#c9a961] mb-1 leading-tight break-words overflow-hidden">
-                    {currentStats.total_obras.toLocaleString('pt-BR')}
+                    {(currentStats.total_obras || 0).toLocaleString('pt-BR')}
                   </p>
                   <p className="text-sm font-medium text-[#888] uppercase tracking-wider">
                     Total de Obras
@@ -415,7 +422,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mb-2 min-w-0">
                   <p className="text-4xl font-bold text-[#c9a961] mb-1 leading-tight break-words overflow-hidden">
-                    {currentStats.total_sessoes.toLocaleString('pt-BR')}
+                    {(currentStats.total_sessoes || 0).toLocaleString('pt-BR')}
                   </p>
                   <p className="text-sm font-medium text-[#888] uppercase tracking-wider">
                     Sessões Totais
@@ -986,7 +993,7 @@ export default function Dashboard() {
             </thead>
                 <tbody className="divide-y divide-[#2a2a2a]">
               {currentSessions.length > 0 ? (
-                currentSessions.map((session) => (
+                currentSessions.map((session: any) => (
                       <tr key={session.id} className="hover:bg-[#1a1a1a]/50 transition-colors">
                         <td className="px-6 py-4">
                           <strong className="text-[#fff] text-sm font-semibold">#{session.id}</strong>

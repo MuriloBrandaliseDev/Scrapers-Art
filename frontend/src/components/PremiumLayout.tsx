@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Image, Clock, FileText, LogOut, Menu, X, TrendingUp, Sparkles } from 'lucide-react'
+import { LayoutDashboard, Image, Clock, FileText, LogOut, Menu, X, TrendingUp } from 'lucide-react'
 import clsx from 'clsx'
 
 interface PremiumLayoutProps {

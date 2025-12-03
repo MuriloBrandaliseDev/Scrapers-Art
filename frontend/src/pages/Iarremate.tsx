@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiService } from '../lib/api'
-import { ExternalLink, Image as ImageIcon, TrendingUp, Filter, X, Search, ChevronDown, ChevronUp, Download, AlertCircle } from 'lucide-react'
+import { ExternalLink, Image as ImageIcon, Filter, X, Search, ChevronDown, ChevronUp, Download, AlertCircle } from 'lucide-react'
 import { exportToExcel } from '../utils/excelExport'
 import TruncatedText from '../components/TruncatedText'
 
@@ -42,7 +42,7 @@ export default function Iarremate() {
   const obrasFiltradas = useMemo(() => {
     if (!obras) return []
     
-    return obras.filter((obra) => {
+    return obras.filter((obra: any) => {
       // Filtro de valor mínimo
       if (valorMin) {
         const valorObra = parseFloat((obra.valor || '0').replace(/[^\d,]/g, '').replace(',', '.'))
@@ -61,12 +61,9 @@ export default function Iarremate() {
     })
   }, [obras, valorMin, valorMax])
 
+  // Categorias únicas para filtro
   const categorias = obras
-    ? [...new Set(obras.map((o) => o.categoria).filter(Boolean))]
-    : []
-
-  const artistas = obras
-    ? [...new Set(obras.map((o) => o.nome_artista).filter(Boolean))]
+    ? [...new Set(obras.map((o: any) => o.categoria).filter(Boolean))]
     : []
 
   // Total geral de obras do iArremate (não apenas as exibidas)
@@ -203,8 +200,8 @@ export default function Iarremate() {
                   }}
                 >
                   <option value="">Todas</option>
-                  {categorias.map((cat) => (
-                    <option key={cat} value={cat}>
+                  {categorias.map((cat: string) => (
+                    <option key={cat || ''} value={cat || ''}>
                       {cat}
                     </option>
                   ))}
@@ -326,8 +323,8 @@ export default function Iarremate() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#2a2a2a]">
-                  {obrasFiltradas.map((obra) => (
-                    <tr key={obra.id} className="hover:bg-[#1a1a1a]/50 transition-colors group">
+                  {obrasFiltradas.map((obra: any) => (
+                    <tr key={String(obra.id || obra.titulo || Math.random())} className="hover:bg-[#1a1a1a]/50 transition-colors group">
                       <td className="px-6 py-4 max-w-[200px]">
                         <TruncatedText 
                           text={obra.nome_artista} 

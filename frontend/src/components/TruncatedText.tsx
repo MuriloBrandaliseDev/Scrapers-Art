@@ -15,7 +15,6 @@ export default function TruncatedText({
   className = '',
   showExpandIcon = true 
 }: TruncatedTextProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
 

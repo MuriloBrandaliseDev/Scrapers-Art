@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { 
   Brain, Mail, Lock, User, ArrowRight, Eye, EyeOff, CheckCircle2, 
-  Sparkles, Zap, Shield, Crown, ArrowLeft, CreditCard, Calendar
+  Sparkles, Zap, Shield, Crown, ArrowLeft, CreditCard
 } from 'lucide-react'
 
 const PLANOS = [

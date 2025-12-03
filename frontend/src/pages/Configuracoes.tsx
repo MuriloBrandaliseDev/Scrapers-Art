@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { 
-  Settings, CreditCard, User, Bell, Shield, Key, 
-  Crown, Zap, Shield as ShieldIcon, CheckCircle2, 
-  Calendar, ArrowRight, AlertCircle
+  Settings, CreditCard, User, Bell, Shield, 
+  Crown, Calendar, ArrowRight, AlertCircle
 } from 'lucide-react'
 
 export default function Configuracoes() {

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiService } from '../lib/api'
-import { ExternalLink, Image as ImageIcon, TrendingUp, Filter, X, Search, ChevronDown, ChevronUp, Layers, Sparkles, BarChart3, DollarSign, Target, AlertCircle } from 'lucide-react'
+import { ExternalLink, Image as ImageIcon, Filter, X, Search, ChevronDown, ChevronUp, Layers, Sparkles, BarChart3, DollarSign, Target, AlertCircle } from 'lucide-react'
 import TruncatedText from '../components/TruncatedText'
 
 export default function Obras() {
@@ -34,9 +34,7 @@ export default function Obras() {
     return obras || []
   }, [obras])
 
-  const categorias = obras
-    ? [...new Set(obras.map((o) => o.categoria).filter(Boolean))]
-    : []
+  // Variável removida - não utilizada
 
   const totalObras = stats?.total_obras || 0
 
@@ -51,22 +49,22 @@ export default function Obras() {
       }
     }
 
-    const obrasComValor = obras.filter(o => o.valor && o.valor !== 'N/A').length
-    const obrasComLances = obras.filter(o => (o.numero_lances || 0) > 0).length
+    const obrasComValor = obras.filter((o: any) => o.valor && o.valor !== 'N/A').length
+    const obrasComLances = obras.filter((o: any) => (o.numero_lances || 0) > 0).length
     
     // Calcular valor médio
     const valores = obras
-      .map(o => {
+      .map((o: any) => {
         const v = o.valor || '0'
         const num = parseFloat(v.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0
         return num
       })
-      .filter(v => v > 0)
-    const valorMedio = valores.length > 0 ? valores.reduce((a, b) => a + b, 0) / valores.length : 0
+      .filter((v: number) => v > 0)
+    const valorMedio = valores.length > 0 ? valores.reduce((a: number, b: number) => a + b, 0) / valores.length : 0
 
     // Categoria mais comum
     const catCount: Record<string, number> = {}
-    obras.forEach(o => {
+    obras.forEach((o: any) => {
       if (o.categoria) {
         catCount[o.categoria] = (catCount[o.categoria] || 0) + 1
       }
@@ -329,8 +327,8 @@ export default function Obras() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#2a2a2a]">
-                  {obrasFiltradas.map((obra) => (
-                    <tr key={obra.id} className="hover:bg-[#1a1a1a]/50 transition-colors group">
+                  {obrasFiltradas.map((obra: any) => (
+                    <tr key={String(obra.id || obra.titulo || Math.random())} className="hover:bg-[#1a1a1a]/50 transition-colors group">
                       <td className="px-6 py-4 max-w-[200px]">
                         <TruncatedText 
                           text={obra.nome_artista} 

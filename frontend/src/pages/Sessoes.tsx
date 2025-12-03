@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiService } from '../lib/api'
-import { Clock, Filter, Download, AlertCircle, TrendingUp, X, ChevronDown, ChevronUp } from 'lucide-react'
-import clsx from 'clsx'
+import { Clock, Filter, Download, AlertCircle, X, ChevronDown, ChevronUp, TrendingUp } from 'lucide-react'
 import TruncatedText from '../components/TruncatedText'
 
 export default function Sessoes() {
@@ -49,7 +48,7 @@ export default function Sessoes() {
 
   // Total geral de sessões (não apenas as exibidas)
   const totalSessoes = allSessions?.length || stats?.total_sessoes || 0
-  const sessoesAtivas = allSessions?.filter((s) => s.status === 'executando').length || 0
+  const sessoesAtivas = allSessions?.filter((s: any) => s.status === 'executando').length || 0
 
   const limparFiltros = () => {
     setStatus('')
@@ -233,7 +232,7 @@ export default function Sessoes() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#2a2a2a]">
-                  {sessoesFiltradas.map((session) => (
+                  {sessoesFiltradas.map((session: any) => (
                     <tr key={session.id} className="hover:bg-[#1f1f1f] transition-colors">
                       <td className="px-4 py-3">
                         <strong className="text-[#fff] text-xs font-semibold">#{session.id}</strong>

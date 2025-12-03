@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiService } from '../lib/api'
-import { Bell, X, Image as ImageIcon, Clock, CheckCircle, AlertCircle, Sparkles } from 'lucide-react'
+import { Bell, X, Image as ImageIcon, CheckCircle, AlertCircle, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 
@@ -65,8 +65,8 @@ export default function Notifications() {
     // Se não há estado anterior, apenas salvar o estado atual (primeira carga)
     if (!lastState) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        total_obras: stats.total_obras || 0,
-        total_sessoes: stats.total_sessoes || 0,
+        total_obras: (stats as any)?.total_obras || 0,
+        total_sessoes: (stats as any)?.total_sessoes || 0,
         last_session_id: 0,
         timestamp: new Date().toISOString(),
       }))
@@ -75,7 +75,7 @@ export default function Notifications() {
 
     try {
       const last = JSON.parse(lastState)
-      const currentTotal = stats.total_obras || 0
+      const currentTotal = (stats as any)?.total_obras || 0
       const lastTotal = last.total_obras || 0
 
       // Só notificar se houver aumento real e não for a primeira carga
@@ -99,8 +99,8 @@ export default function Notifications() {
 
     // Salvar estado atual
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      total_obras: stats.total_obras || 0,
-      total_sessoes: stats.total_sessoes || 0,
+      total_obras: (stats as any)?.total_obras || 0,
+      total_sessoes: (stats as any)?.total_sessoes || 0,
       last_session_id: JSON.parse(lastState || '{}').last_session_id || 0,
       timestamp: new Date().toISOString(),
     }))
@@ -118,11 +118,11 @@ export default function Notifications() {
       const lastSessionId = last.last_session_id || 0
 
       // Verificar se há novas sessões concluídas
-      const newSessions = sessions.filter(s => 
+      const newSessions = sessions.filter((s: any) => 
         s.id > lastSessionId && s.status === 'concluido'
       )
 
-      newSessions.forEach(session => {
+      newSessions.forEach((session: any) => {
         const newNotification: Notification = {
           id: `session_${session.id}_${Date.now()}`,
           type: 'session_completed',
@@ -137,11 +137,11 @@ export default function Notifications() {
       })
 
       // Verificar sessões com erro
-      const errorSessions = sessions.filter(s => 
+      const errorSessions = sessions.filter((s: any) => 
         s.id > lastSessionId && s.status === 'erro'
       )
 
-      errorSessions.forEach(session => {
+      errorSessions.forEach((session: any) => {
         const newNotification: Notification = {
           id: `session_error_${session.id}_${Date.now()}`,
           type: 'session_error',
@@ -157,7 +157,7 @@ export default function Notifications() {
 
       // Atualizar último ID de sessão
       if (sessions.length > 0) {
-        const maxId = Math.max(...sessions.map(s => s.id))
+        const maxId = Math.max(...sessions.map((s: any) => s.id))
         const currentState = JSON.parse(lastState)
         currentState.last_session_id = maxId
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState))
