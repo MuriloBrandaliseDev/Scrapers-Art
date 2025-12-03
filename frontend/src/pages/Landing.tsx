@@ -6,7 +6,7 @@ import {
   TrendingUp, Clock, Image as ImageIcon, DollarSign, Gauge, Percent, PieChart as PieChartIcon, Users, Layers,
   HelpCircle, Calculator, DollarSign as DollarSignIcon, Radio, RefreshCw, Download, Filter, Database, Sparkles as SparklesIcon
 } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiService } from '../lib/api'
 
@@ -112,12 +112,28 @@ export default function Landing() {
     retry: 1,
   })
 
-  const { data: recentObras } = useQuery({
+  const { data: recentObrasData } = useQuery({
     queryKey: ['obras-realtime', { limit: 10 }],
     queryFn: () => apiService.getObras({ page: 1, per_page: 10 }),
     refetchInterval: 8000, // Atualiza a cada 8 segundos
     retry: 1,
   })
+
+  // Extrair array de obras da resposta da API
+  const recentObras = useMemo(() => {
+    if (!recentObrasData) return []
+    // Se for um array, retornar diretamente
+    if (Array.isArray(recentObrasData)) return recentObrasData
+    // Se for um objeto com propriedade 'obras', retornar isso
+    if (recentObrasData && typeof recentObrasData === 'object' && 'obras' in recentObrasData) {
+      return Array.isArray((recentObrasData as any).obras) ? (recentObrasData as any).obras : []
+    }
+    // Se for um objeto com propriedade 'data', retornar isso
+    if (recentObrasData && typeof recentObrasData === 'object' && 'data' in recentObrasData) {
+      return Array.isArray((recentObrasData as any).data) ? (recentObrasData as any).data : []
+    }
+    return []
+  }, [recentObrasData])
 
   // Animação de contador
   const [animatedValue, setAnimatedValue] = useState(0)
@@ -1475,8 +1491,8 @@ export default function Landing() {
                       </div>
                     ))}
                   </div>
-                ) : recentObras && recentObras.length > 0 ? (
-                  recentObras.slice(0, 8).map((obra: any, idx: number) => (
+                ) : recentObras && Array.isArray(recentObras) && recentObras.length > 0 ? (
+                  (Array.isArray(recentObras) ? recentObras : []).slice(0, 8).map((obra: any, idx: number) => (
                     <div
                       key={idx}
                       className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 hover:border-[#c9a961]/30 transition-all duration-300 group"
