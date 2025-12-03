@@ -119,11 +119,18 @@ export default function Landing() {
     if (Array.isArray(recentSessionsData)) return recentSessionsData
     // Se for um objeto com propriedade 'sessions', retornar isso
     if (recentSessionsData && typeof recentSessionsData === 'object' && 'sessions' in recentSessionsData) {
-      return Array.isArray((recentSessionsData as any).sessions) ? (recentSessionsData as any).sessions : []
+      const sessions = (recentSessionsData as any).sessions
+      return Array.isArray(sessions) ? sessions : []
     }
     // Se for um objeto com propriedade 'data', retornar isso
     if (recentSessionsData && typeof recentSessionsData === 'object' && 'data' in recentSessionsData) {
-      return Array.isArray((recentSessionsData as any).data) ? (recentSessionsData as any).data : []
+      const data = (recentSessionsData as any).data
+      return Array.isArray(data) ? data : []
+    }
+    // Se for um objeto com propriedade 'results' (comum em APIs paginadas), retornar isso
+    if (recentSessionsData && typeof recentSessionsData === 'object' && 'results' in recentSessionsData) {
+      const results = (recentSessionsData as any).results
+      return Array.isArray(results) ? results : []
     }
     return []
   }, [recentSessionsData])
@@ -1408,7 +1415,7 @@ export default function Landing() {
                 </div>
                 <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
                   <p className="text-xs text-[#666]">
-                    {recentSessions?.filter((s: any) => s.status === 'em_andamento').length || 0} em execução
+                    {Array.isArray(recentSessions) ? recentSessions.filter((s: any) => s.status === 'em_andamento').length : 0} em execução
                   </p>
                 </div>
               </div>
