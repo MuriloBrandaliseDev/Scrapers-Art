@@ -105,12 +105,28 @@ export default function Landing() {
     retry: 1,
   })
 
-  const { data: recentSessions } = useQuery({
+  const { data: recentSessionsData } = useQuery({
     queryKey: ['sessions-realtime', { limit: 5 }],
     queryFn: () => apiService.getSessions({ per_page: 5 }),
     refetchInterval: 10000, // Atualiza a cada 10 segundos
     retry: 1,
   })
+
+  // Extrair array de sessões da resposta da API
+  const recentSessions = useMemo(() => {
+    if (!recentSessionsData) return []
+    // Se for um array, retornar diretamente
+    if (Array.isArray(recentSessionsData)) return recentSessionsData
+    // Se for um objeto com propriedade 'sessions', retornar isso
+    if (recentSessionsData && typeof recentSessionsData === 'object' && 'sessions' in recentSessionsData) {
+      return Array.isArray((recentSessionsData as any).sessions) ? (recentSessionsData as any).sessions : []
+    }
+    // Se for um objeto com propriedade 'data', retornar isso
+    if (recentSessionsData && typeof recentSessionsData === 'object' && 'data' in recentSessionsData) {
+      return Array.isArray((recentSessionsData as any).data) ? (recentSessionsData as any).data : []
+    }
+    return []
+  }, [recentSessionsData])
 
   const { data: recentObrasData } = useQuery({
     queryKey: ['obras-realtime', { limit: 10 }],
