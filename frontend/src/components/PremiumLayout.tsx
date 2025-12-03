@@ -40,7 +40,7 @@ export default function PremiumLayout({ children }: PremiumLayoutProps) {
                 <TrendingUp className="w-6 h-6 text-dark" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-gold">Scrapers Art</h1>
+                <h1 className="text-lg font-bold text-gold">ArtMoney</h1>
                 <p className="text-xs text-gold-light/60">Premium Dashboard</p>
               </div>
             </Link>
@@ -89,7 +89,7 @@ export default function PremiumLayout({ children }: PremiumLayoutProps) {
             <div className="w-10 h-10 bg-gradient-gold rounded-lg flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-dark" />
             </div>
-            <span className="text-gold font-bold">Scrapers Art</span>
+            <span className="text-gold font-bold">ArtMoney</span>
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

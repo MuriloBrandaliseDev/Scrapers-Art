@@ -165,7 +165,7 @@ export default function Login() {
               </div>
               <div className="text-left">
                 <h1 className="text-2xl font-black bg-gradient-to-r from-[#c9a961] to-[#d4b87a] bg-clip-text text-transparent">
-                  Scrapers Art
+                  ArtMoney
                 </h1>
                 <p className="text-xs text-[#888]">Intelligence Platform</p>
               </div>

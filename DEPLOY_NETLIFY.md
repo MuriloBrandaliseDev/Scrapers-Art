@@ -20,16 +20,16 @@ git status
 # Se ainda não inicializou o git:
 git init
 git add .
-git commit -m "Initial commit - Scrapers Art Frontend"
+git commit -m "Initial commit - ArtMoney Frontend"
 
 # Criar repositório no GitHub e conectar:
 # 1. Vá em https://github.com/new
-# 2. Crie um novo repositório (ex: "scrapers-art")
+# 2. Crie um novo repositório (ex: "ArtMoney")
 # 3. NÃO inicialize com README
 # 4. Copie a URL do repositório
 
 # Conectar ao repositório remoto:
-git remote add origin https://github.com/SEU_USUARIO/scrapers-art.git
+git remote add origin https://github.com/SEU_USUARIO/ArtMoney.git
 git branch -M main
 git push -u origin main
 ```
@@ -44,7 +44,7 @@ git push -u origin main
    - Clique em "Add new site" → "Import an existing project"
    - Escolha "Deploy with GitHub"
    - Autorize o Netlify a acessar seus repositórios
-   - Selecione o repositório "scrapers-art"
+   - Selecione o repositório "ArtMoney"
 
 3. **Configurar Build Settings:**
    - **Base directory:** `frontend`

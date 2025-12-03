@@ -230,7 +230,7 @@ export default function Landing() {
       country: 'Brasil',
       flag: 'BR',
       image: '/images/foto1.png',
-      quote: 'Altamente impressionada com a profissionalidade e dedicação do Scrapers Art. A comunicação clara gerou confiança. Empolgada para fazer parte desta jornada!',
+      quote: 'Altamente impressionada com a profissionalidade e dedicação do ArtMoney. A comunicação clara gerou confiança. Empolgada para fazer parte desta jornada!',
     },
     {
       id: 2,
@@ -374,7 +374,7 @@ export default function Landing() {
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-[#c9a961] to-[#d4b87a] bg-clip-text text-transparent">
-                  Scrapers Art
+                  ArtMoney
                 </h1>
                 <p className="text-xs text-[#888]">Intelligence Platform</p>
               </div>
@@ -795,16 +795,16 @@ export default function Landing() {
               {/* Header do Dashboard - Igual ao Real */}
               <div className="relative overflow-hidden bg-gradient-to-br from-[#151515] via-[#1a1a1a] to-[#151515] border border-[#2a2a2a]/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 md:mb-8">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#c9a961]/5 via-transparent to-[#b89a4f]/5 pointer-events-none" />
-                <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#c9a961] via-[#d4b87a] to-[#b89a4f] rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-[#c9a961]/20">
-                      <Brain className="w-8 h-8 text-[#0f0f0f]" />
+                <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+                  <div className="flex items-center gap-3 sm:gap-4 md:gap-6 w-full min-w-0">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-[#c9a961] via-[#d4b87a] to-[#b89a4f] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-[#c9a961]/20 flex-shrink-0">
+                      <Brain className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-[#0f0f0f]" />
                     </div>
-                    <div>
-                      <h3 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#c9a961] via-[#d4b87a] to-[#c9a961] bg-clip-text text-transparent mb-2">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#c9a961] via-[#d4b87a] to-[#c9a961] bg-clip-text text-transparent mb-1 sm:mb-2 break-words">
                         Intelligence Dashboard
                       </h3>
-                      <p className="text-[#888] text-sm">Análise inteligente e insights em tempo real</p>
+                      <p className="text-[#888] text-xs sm:text-sm">Análise inteligente e insights em tempo real</p>
                     </div>
                   </div>
                 </div>
@@ -1785,7 +1785,7 @@ export default function Landing() {
               <span className="text-sm font-semibold text-[#c9a961]">Vantagens Exclusivas</span>
             </div>
             <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
-              Por Que Escolher <span className="bg-gradient-to-r from-[#c9a961] to-[#d4b87a] bg-clip-text text-transparent">Scrapers Art</span>
+              Por Que Escolher <span className="bg-gradient-to-r from-[#c9a961] to-[#d4b87a] bg-clip-text text-transparent">ArtMoney</span>
             </h2>
           </div>
 
@@ -2503,13 +2503,13 @@ export default function Landing() {
               </div>
               <div>
                 <p className="text-lg font-bold bg-gradient-to-r from-[#c9a961] to-[#d4b87a] bg-clip-text text-transparent">
-                  Scrapers Art
+                  ArtMoney
                 </p>
                 <p className="text-xs text-[#888]">Intelligence Platform</p>
               </div>
             </Link>
             <p className="text-sm text-[#666] text-center md:text-right">
-              Copyright © 2024 Scrapers Art. Todos os direitos reservados.
+              Copyright © 2024 ArtMoney. Todos os direitos reservados.
             </p>
           </div>
         </div>

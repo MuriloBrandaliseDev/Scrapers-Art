@@ -67,7 +67,7 @@ export default function Layout({ children }: LayoutProps) {
               'overflow-hidden transition-all duration-300',
               sidebarHovered ? 'opacity-100 w-auto' : 'opacity-0 w-0'
             )}>
-              <h1 className="text-lg font-bold text-[#c9a961] whitespace-nowrap">Scrapers Art</h1>
+              <h1 className="text-lg font-bold text-[#c9a961] whitespace-nowrap">ArtMoney</h1>
               <p className="text-xs text-[#888] whitespace-nowrap">Sistema</p>
             </div>
           </Link>
@@ -185,7 +185,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="w-10 h-10 bg-gradient-to-br from-[#c9a961] to-[#b89a4f] rounded-lg flex items-center justify-center">
                   <DashboardIcon className="w-5 h-5 text-[#0f0f0f]" />
                 </div>
-                <span className="text-[#c9a961] font-bold">Scrapers Art</span>
+                <span className="text-[#c9a961] font-bold">ArtMoney</span>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}

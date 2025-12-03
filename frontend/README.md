@@ -1,4 +1,4 @@
-# Scrapers Art - Frontend React + TypeScript
+# ArtMoney - Frontend React + TypeScript
 
 Frontend moderno e profissional construído com React, TypeScript e Tailwind CSS.
 
