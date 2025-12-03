@@ -72,7 +72,27 @@ export default function Dashboard() {
   }
 
   const currentStats: StatsType = (stats as StatsType) || defaultStats
-  const currentSessions = sessions || []
+  // Garantir que sessions seja sempre um array
+  const currentSessions = useMemo(() => {
+    if (!sessions) return []
+    if (Array.isArray(sessions)) return sessions
+    // Se for um objeto com propriedade 'sessions', retornar isso
+    if (sessions && typeof sessions === 'object' && 'sessions' in sessions) {
+      const sessionsArray = (sessions as any).sessions
+      return Array.isArray(sessionsArray) ? sessionsArray : []
+    }
+    // Se for um objeto com propriedade 'data', retornar isso
+    if (sessions && typeof sessions === 'object' && 'data' in sessions) {
+      const data = (sessions as any).data
+      return Array.isArray(data) ? data : []
+    }
+    // Se for um objeto com propriedade 'results', retornar isso
+    if (sessions && typeof sessions === 'object' && 'results' in sessions) {
+      const results = (sessions as any).results
+      return Array.isArray(results) ? results : []
+    }
+    return []
+  }, [sessions])
   const obras = obrasSample || []
 
   // Cores douradas premium e elegantes
@@ -299,9 +319,9 @@ export default function Dashboard() {
     
     return Object.entries(scrapersCount)
       .map(([name, value]) => ({
-        name: name.toUpperCase(),
-        value,
-      }))
+    name: name.toUpperCase(),
+    value,
+  }))
       .sort((a, b) => b.value - a.value)
   }, [obras, currentStats.obras_por_scraper])
 
