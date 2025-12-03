@@ -71,7 +71,7 @@ export default function Dashboard() {
     obras_por_scraper: {} as Record<string, number>,
   }
 
-  const currentStats = stats || defaultStats
+  const currentStats: StatsType = (stats as StatsType) || defaultStats
   const currentSessions = sessions || []
   const obras = obrasSample || []
 

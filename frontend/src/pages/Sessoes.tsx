@@ -47,7 +47,8 @@ export default function Sessoes() {
   }, [sessions])
 
   // Total geral de sessões (não apenas as exibidas)
-  const totalSessoes = allSessions?.length || stats?.total_sessoes || 0
+  const statsTyped = stats as any
+  const totalSessoes = allSessions?.length || statsTyped?.total_sessoes || 0
   const sessoesAtivas = allSessions?.filter((s: any) => s.status === 'executando').length || 0
 
   const limparFiltros = () => {

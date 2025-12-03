@@ -67,10 +67,11 @@ export default function Iarremate() {
     : []
 
   // Total geral de obras do iArremate (não apenas as exibidas)
-  const totalObras = stats?.obras_por_scraper?.['iarremate'] 
-    || stats?.obras_por_scraper?.['IARREMATE'] 
-    || stats?.obras_por_scraper?.['iArremate']
-    || Object.entries(stats?.obras_por_scraper || {}).find(([key]) => 
+  const statsTyped = stats as any
+  const totalObras = statsTyped?.obras_por_scraper?.['iarremate'] 
+    || statsTyped?.obras_por_scraper?.['IARREMATE'] 
+    || statsTyped?.obras_por_scraper?.['iArremate']
+    || Object.entries(statsTyped?.obras_por_scraper || {}).find(([key]) => 
         key.toLowerCase() === 'iarremate'
       )?.[1]
     || 0

@@ -70,10 +70,11 @@ export default function LeiloesBR() {
 
 
   // Total geral de obras do LeilõesBR (não apenas as exibidas)
-  const totalObras = stats?.obras_por_scraper?.['leiloes_br'] 
-    || stats?.obras_por_scraper?.['LEILOES_BR'] 
-    || stats?.obras_por_scraper?.['leiloes-br']
-    || Object.entries(stats?.obras_por_scraper || {}).find(([key]) => 
+  const statsTyped = stats as any
+  const totalObras = statsTyped?.obras_por_scraper?.['leiloes_br'] 
+    || statsTyped?.obras_por_scraper?.['LEILOES_BR'] 
+    || statsTyped?.obras_por_scraper?.['leiloes-br']
+    || Object.entries(statsTyped?.obras_por_scraper || {}).find(([key]) => 
         key.toLowerCase().replace(/[-_]/g, '') === 'leiloesbr'
       )?.[1]
     || 0

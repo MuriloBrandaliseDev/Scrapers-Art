@@ -36,7 +36,8 @@ export default function Obras() {
 
   // Variável removida - não utilizada
 
-  const totalObras = stats?.total_obras || 0
+  const statsTyped = stats as any
+  const totalObras = statsTyped?.total_obras || 0
 
   // Calcular insights inteligentes
   const insights = useMemo(() => {

@@ -122,8 +122,9 @@ export default function Landing() {
   // Animação de contador
   const [animatedValue, setAnimatedValue] = useState(0)
   useEffect(() => {
-    if (realTimeStats?.total_obras) {
-      const target = realTimeStats.total_obras
+    const statsTyped = realTimeStats as any
+    if (statsTyped?.total_obras) {
+      const target = statsTyped.total_obras
       const duration = 2000
       const steps = 60
       const increment = target / steps
@@ -139,7 +140,7 @@ export default function Landing() {
       }, duration / steps)
       return () => clearInterval(timer)
     }
-  }, [realTimeStats?.total_obras])
+  }, [realTimeStats])
 
   // Quiz interativo
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({})
@@ -1366,7 +1367,7 @@ export default function Landing() {
                     {isLoadingStats ? (
                       <span className="inline-block w-16 h-10 bg-[#2a2a2a] rounded animate-pulse" />
                     ) : (
-                      <span className="tabular-nums">{realTimeStats?.total_sessoes || 0}</span>
+                      <span className="tabular-nums">{(realTimeStats as any)?.total_sessoes || 0}</span>
                     )}
                   </p>
                   <p className="text-xs sm:text-sm font-medium text-[#888] uppercase tracking-wider">
